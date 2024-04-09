@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminAuthentication;
+use App\Http\Controllers\Admin\AdminAuthenticationController;
+use App\Http\Controllers\Admin\BackendController;
 use App\Http\Controllers\FrontendController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,24 @@ Route::get('/',[FrontendController::class, 'index'])->name('front.home');
 
 
 
-Route::get('/admin/login',[AdminAuthentication::class, 'login'])->name('admin.login');
+Route::group(['prefix'=>'admin'],function(){
+
+    Route::group(['middleware'=>'admin.guest'], function(){
+        Route::get('/login',[AdminAuthenticationController::class, 'login'])->name('admin.login');
+        Route::post('/login',[AdminAuthenticationController::class, 'store'])->name('admin.store');
+    });
+
+      Route::group(['middleware'=>'admin.auth'], function(){
+        Route::get('/logout',[AdminAuthenticationController::class, 'logout'])->name('admin.logout');
+
+        Route::get('/dashboard',[BackendController::class, 'index'])->name('admin.index');
+        
+    });
+
+
+});
+
+
+
 
 

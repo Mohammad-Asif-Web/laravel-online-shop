@@ -18,7 +18,7 @@ class AdminRedirectIfAuthenticate
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::guard('admin')->check()) {
-            // return redirect(RouteServiceProvider::HOME);
+            return redirect()->route('admin.index');
          }
         return $next($request);
     }
